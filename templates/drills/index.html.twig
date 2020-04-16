@@ -1,0 +1,50 @@
+{% extends 'baseline.html.twig' %}
+
+{% block title %}Drills index{% endblock %}
+
+{% block body %}
+    <h1>Drills index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>
+                <form action="{{ url('search_type') }}" method="post">
+                    <input name="type">
+                    <input type="submit">
+                </form>
+            </th>
+            <th></th>
+        </tr>
+        {% for drill in drills %}
+            <tr>
+                <td>{{ drill.id }}</td>
+                <td>{{ drill.name }}</td>
+                <td>{{ drill.type }}</td>
+                <td>
+                    <a href="{{ path('drills_show', {'id': drill.id}) }}">show</a>
+                    <a href="{{ path('drills_edit', {'id': drill.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no results found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('drills_new') }}">Create new</a>
+{% endblock %}

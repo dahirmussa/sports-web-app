@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}bmi{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+        @import '/css/flash.css';
+        @import '/css/nav.css';
+        header {
+            text-align: right;
+            border-bottom: 0.5rem solid black; padding: 1rem;
+        }
+        body{
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            font-family: sans-serif;
+            min-height: 100vh;
+        }
+        h2{
+            font-size: 30px;
+            font-weight: 600;
+        }
+        .text{
+            text-align: left;
+            margin-left: 150px;
+        }
+        #w, #h{
+            color: #222f3e;
+            text-align: left;
+            font-size: 20px;
+            font-weight: 200;
+            outline: none;
+            border: none;
+            background: none;
+            border-bottom: 1px solid #341f97;
+            width: 200px;
+        }
+        #w:focus, #h:focus{
+            border-bottom: 2px solid #341f97;
+            width: 300px;
+            transition: 0.5s;
+        }
+        #result{
+            color: #341f97;
+        }
+        #btn{
+            font-family: inherit;
+            margin-top: 10px;
+            border: none;
+            color: #fff;
+            background-image: linear-gradient(120deg, #385eff, #5f27cd);
+            width: 150px;
+            padding: 10px;
+            border-radius: 30px;
+            outline: none;
+            cursor: pointer;
+        }
+        #btn:hover{
+            box-shadow: 1px 1px 10px #341f97;
+        }
+        #info{
+            font-size: 12px;
+            font-family: inherit;
+        }
+
+    </style>
+    <script type="text/javascript">
+        function BMI() {
+            var h=document.getElementById('h').value;
+            var w=document.getElementById('w').value;
+            var bmi=w/(h/100*h/100);
+            var bmio=(bmi.toFixed(2));
+
+            document.getElementById("result").innerHTML="Your BMI is " + bmio;
+        }
+    </script>
+</head>
+<body>
+<header>
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        Username:
+        <strong>{{ app.user.username }}</strong>
+        <br>
+        <a href="{{ url('app_logout') }}">logout</a>
+    {% else %}
+        <a href="{{ url('app_login') }}">login</a>
+    {% endif %}
+</header>
+<nav class="navbar navbar-expand-lg navbar-dark navbar-bg mb-5">
+    <a style="margin-left: 0.1rem;" class="navbar-brand space-brand" href="#">
+        Fitness app
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav ml-auto">
+            {% if is_granted('ROLE_ADMIN') %}
+                <li>
+                    <a href="{{ url('admin') }}">admin home</a>
+                </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link"  href="{{ url('team') }}">
+                    team
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"  href="{{ url('timetable') }}">
+                    timetable
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"  href="{{ url('player') }}">
+                    player
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"  href="{{ url('hompage') }}">
+                    hompage
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            {% block body %}{% endblock %}
+        </div>
+    </div>
+</div>
+<div>
+    <h2>BMI Calculator</h2>
+    <p id="paragram" class="text">Height</p>
+    <input type="text" id="h">
+    <p class="text">Weight</p>
+    <input type="text" id="w">
+    <p id="result"></p>
+    <button id="btn" onClick="BMI()">Calculate</button>
+    <p></p>
+    <p id="info">Please enter height [cm] and weight [kg]</p>
+</div>
+{% block javascripts %}{% endblock %}
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>

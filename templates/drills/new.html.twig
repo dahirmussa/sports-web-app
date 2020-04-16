@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Drills{% endblock %}
+
+{% block body %}
+    <h1>Create new Drills</h1>
+
+    {{ include('drills/_form.html.twig') }}
+
+    <a href="{{ path('drills_index') }}">back to list</a>
+{% endblock %}

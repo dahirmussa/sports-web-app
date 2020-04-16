@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    {% block stylesheets %}{% endblock %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+        @import '/css/flash.css';
+        @import '/css/nav.css';
+        header {
+            text-align: right;
+            border-bottom: 0.5rem solid black; padding: 1rem;
+        }
+    </style>
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark navbar-bg mb-5">
+    <a style="margin-left: 0.1rem;" class="navbar-brand space-brand" href="#">
+        Fitness app
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+
+                <a class="nav-link"  href="{{ url('drills_index') }}">
+                    Drills table
+                </a>
+            </li>
+            {% if is_granted('ROLE_ADMIN') %}
+                <li>
+                    <a href="{{ url('admin') }}">admin home</a>
+                </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link"  href="{{ url('about') }}">
+                    about
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"  href="{{ url('app_register') }}">
+                    Register
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"  href="{{ url('player') }}">
+                    Player
+                </a>
+            </li>
+
+        </ul>
+    </div>
+
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            {% block body %}{% endblock %}
+        </div>
+    </div>
+</div>
+<div class="container">
+    <form >
+        <label for="work">To Do:</label>
+        <input type="text" id="work" class="form-control" name="work" value="" placeholder="What you'll do?">
+        <label for="time">Time:</label>
+        <input type="text" id="time" class="form-control" name="time" value="" placeholder="eg. 8:00-9:30"> <br>
+        <button type="button" id="done" class="btn btn-primary">Add</button>
+    </form>
+    <br>
+    <table class="table">
+        <thead class="thead-dark" id="mytable">
+        <tr>
+
+            <th scope="col">Time</th>
+            <th scope="col">To Do</th>
+
+        </tr>
+        </thead>
+
+    </table>
+
+
+</div>
+<br><br><br>
+<center><button type="button" id="complete" class="btn btn-dark">Complete</button><center><br><br><br><br>
+        <script>
+
+            var btn= document.getElementById("done");
+            btn.addEventListener("click",AddRow);
+            var row=1;
+            function AddRow()
+            {
+                var work=document.getElementById("work").value;
+                var time=document.getElementById("time").value;
+
+                if(!work || !time)
+                {
+                    alert("Please fill all boxes!")
+                    return;
+                }
+                var mytable= document.getElementById("mytable");
+                var newRow= mytable.insertRow(row);
+                var cell1= newRow.insertCell(0);
+                var cell2= newRow.insertCell(1);
+
+                cell1.innerHTML = time;
+                cell2.innerHTML = work;
+
+                row++;
+                work.reset();
+            }
+            var complete= document.getElementById("complete");
+            complete.addEventListener("click",alertt);
+            function alertt()
+            {
+                alert("Good! Take a ScreenShot of your Time Table and follow this. Best Of Luck.")
+            }
+
+        </script>
+{% block javascripts %}{% endblock %}
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>

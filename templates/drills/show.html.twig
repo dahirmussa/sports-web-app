@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Drills{% endblock %}
+
+{% block body %}
+    <h1>Drills</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ drill.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ drill.name }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ drill.type }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('drills_index') }}">back to list</a>
+
+    <a href="{{ path('drills_edit', {'id': drill.id}) }}">edit</a>
+
+    {{ include('drills/_delete_form.html.twig') }}
+{% endblock %}
