@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,56 +21,68 @@ class Player
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $firstname;
+    private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\OneToMany(targetEntity="App\Entity\PlayerDrill", mappedBy="player")
      */
-    private $surname;
+    private $playerDrills;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $team;
+    public function __construct()
+    {
+        $this->playerDrills = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getFirstname(): ?string
+    public function getName(): ?string
     {
-        return $this->firstname;
+        return $this->name;
     }
 
-    public function setFirstname(string $firstname): self
+    public function setName(string $name): self
     {
-        $this->firstname = $firstname;
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getSurname(): ?string
+    /**
+     * @return Collection|PlayerDrill[]
+     */
+    public function getPlayerDrills(): Collection
     {
-        return $this->surname;
+        return $this->playerDrills;
     }
 
-    public function setSurname(string $surname): self
+    public function addPlayerDrill(PlayerDrill $playerDrill): self
     {
-        $this->surname = $surname;
+        if (!$this->playerDrills->contains($playerDrill)) {
+            $this->playerDrills[] = $playerDrill;
+            $playerDrill->setPlayer($this);
+        }
 
         return $this;
     }
 
-    public function getTeam(): ?string
+    public function removePlayerDrill(PlayerDrill $playerDrill): self
     {
-        return $this->team;
-    }
-
-    public function setTeam(string $team): self
-    {
-        $this->team = $team;
+        if ($this->playerDrills->contains($playerDrill)) {
+            $this->playerDrills->removeElement($playerDrill);
+            // set the owning side to null (unless already changed)
+            if ($playerDrill->getPlayer() === $this) {
+                $playerDrill->setPlayer(null);
+            }
+        }
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 }

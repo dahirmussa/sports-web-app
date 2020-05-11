@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Drill{% endblock %}
+
+{% block body %}
+    <h1>Edit Drill</h1>
+
+    {{ include('drill/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('drill_index') }}">back to list</a>
+
+    {{ include('drill/_delete_form.html.twig') }}
+{% endblock %}

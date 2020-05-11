@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PlayerDrill index{% endblock %}
+
+{% block body %}
+    <h1>PlayerDrill index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Player</th>
+                <th>Drill</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for player_drill in player_drills %}
+            <tr>
+                <td>{{ player_drill.id }}</td>
+                <td>{{ player_drill.player.name }}</td>
+                <td>{{ player_drill.drill.name }}</td>
+                <td>
+                    {% if is_granted('ROLE_COACH') %}
+                    <a href="{{ path('player_drill_show', {'id': player_drill.id}) }}">show</a>
+                    <a href="{{ path('player_drill_edit', {'id': player_drill.id}) }}">edit</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('player_drill_new') }}">Create new</a>
+{% endblock %}

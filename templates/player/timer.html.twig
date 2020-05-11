@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Fitness app{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+        @import '/css/flash.css';
+        @import '/css/nav.css';
+        header {
+            text-align: right;
+            border-bottom: 0.5rem solid black; padding: 1rem;
+        }
+        #timer {
+            font-size: 50px;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        Username:
+        <strong>{{ app.user.username }}</strong>
+        <br>
+        <a href="{{ url('app_logout') }}">logout</a>
+    {% else %}
+        <a href="{{ url('app_login') }}">login</a>
+    {% endif %}
+</header>
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-bg mb-5">
+    <a style="margin-left: 0.1rem;" class="navbar-brand space-brand" href="#">
+        Fitness app
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link"  href="{{ url('homepage') }}">
+                    home
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"  href="{{ url('aboutpage') }}">
+                    about
+                </a>
+            </li>
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('admin') }}">
+                        admin home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('user_index') }}">
+                        user CRUD
+                    </a>
+                </li>
+            {% endif %}
+            {% if is_granted('ROLE_COACH') %}
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('player_index') }}">
+                        player CRUD
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('drill_index') }}">
+                        drill CRUD
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('player_drill_index') }}">
+                        playerdrill CRUD
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('coachpage') }}">
+                        coach page
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('Footballvideos') }}">
+                        Footballvideos
+                    </a>
+                </li>
+            {% endif %}
+            {% if is_granted('ROLE_PlAYER') %}
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('Basketballvideos') }}">
+                        Basketballvideos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('Footballvideos') }}">
+                        Footballvideos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('Cricketvideos') }}">
+                        Cricketvideos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('bmi') }}">
+                        bmi
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('bmr') }}">
+                        bmr
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('ToDOList') }}">
+                        ToDOList
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('timer') }}">
+                        timer
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            {% block body %}{% endblock %}
+        </div>
+    </div>
+</div>
+
+<h1 id="timer">00 : 00 . 000</h1>
+<div>
+    <button id="toggle">Start</button>
+    <button id="reset">Reset</button>
+</div>
+<script>
+    var timer = document.getElementById('timer');
+    var toggleBtn = document.getElementById('toggle');
+    var resetBtn = document.getElementById('reset');
+
+    var watch = new Stopwatch(timer);
+
+    function start() {
+        toggleBtn.textContent = 'Stop';
+        watch.start();
+    }
+
+    function stop() {
+        toggleBtn.textContent = 'Start';
+        watch.stop();
+    }
+
+    toggleBtn.addEventListener('click', function() {
+        watch.isOn ? stop() : start();
+    });
+
+    resetBtn.addEventListener('click', function() {
+        watch.reset();
+    });
+    function Stopwatch(elem) {
+        var time = 0;
+        var offset;
+        var interval;
+
+        function update() {
+            if (this.isOn) {
+                time += delta();
+            }
+
+            elem.textContent = timeFormatter(time);
+        }
+
+        function delta() {
+            var now = Date.now();
+            var timePassed = now - offset;
+
+            offset = now;
+
+            return timePassed;
+        }
+
+        function timeFormatter(time) {
+            time = new Date(time);
+
+            var minutes = time.getMinutes().toString();
+            var seconds = time.getSeconds().toString();
+            var milliseconds = time.getMilliseconds().toString();
+
+            if (minutes.length < 2) {
+                minutes = '0' + minutes;
+            }
+
+            if (seconds.length < 2) {
+                seconds = '0' + seconds;
+            }
+
+            while (milliseconds.length < 3) {
+                milliseconds = '0' + milliseconds;
+            }
+
+            return minutes + ' : ' + seconds + ' . ' + milliseconds;
+        }
+
+        this.start = function() {
+            interval = setInterval(update.bind(this), 10);
+            offset = Date.now();
+            this.isOn = true;
+        };
+
+        this.stop = function() {
+            clearInterval(interval);
+            interval = null;
+            this.isOn = false;
+        };
+
+        this.reset = function() {
+            time = 0;
+            update();
+        };
+
+        this.isOn = false;
+    }
+</script>
+{% block javascripts %}{% endblock %}
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+</body>
+</html>

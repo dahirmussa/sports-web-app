@@ -12,7 +12,10 @@
             text-align: right;
             border-bottom: 0.5rem solid black; padding: 1rem;
         }
-
+        header {
+            text-align: right;
+            border-bottom: 0.5rem solid black; padding: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -33,43 +36,96 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav ml-auto">
-            <a class="nav-link"  href="{{ url('app_register') }}">
-                Register
-            </a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    player
+            <li class="nav-item">
+                <a class="nav-link"  href="{{ url('homepage') }}">
+                    home
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item"href="{{ url('bmr') }}">bmr </a>
-                    <a class="dropdown-item"href="{{ url('bmi') }}">bmi </a>
-                    <a class="dropdown-item"href="{{ url('Footballvideos') }}">FootballVideos </a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                </div>
             </li>
             <li class="nav-item">
-
-                <a class="nav-link"  href="{{ url('drills_index') }}">
-                    Drills table
+                <a class="nav-link"  href="{{ url('aboutpage') }}">
+                    about
                 </a>
             </li>
             {% if is_granted('ROLE_ADMIN') %}
-                <li>
-                    <a href="{{ url('admin') }}">admin home</a>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('admin') }}">
+                        admin home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('user_index') }}">
+                        user CRUD
+                    </a>
                 </li>
             {% endif %}
+            {% if is_granted('ROLE_COACH') %}
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('player_index') }}">
+                        player CRUD
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('drill_index') }}">
+                        drill CRUD
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('player_drill_index') }}">
+                        playerdrill CRUD
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('coachpage') }}">
+                        coach page
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('Footballvideos') }}">
+                        Footballvideos
+                    </a>
+                </li>
+            {% endif %}
+            {% if is_granted('ROLE_PlAYER') %}
             <li class="nav-item">
-                <a class="nav-link"  href="{{ url('coache') }}">
-                    coache
+                <a class="nav-link"  href="{{ url('Basketballvideos') }}">
+                    Basketballvideos
                 </a>
+            </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('Footballvideos') }}">
+                        Footballvideos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('Cricketvideos') }}">
+                        Cricketvideos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('bmi') }}">
+                        bmi
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('bmr') }}">
+                        bmr
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('ToDOList') }}">
+                        ToDOList
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="{{ url('timer') }}">
+                        timer
+                    </a>
+                </li>
+            {% endif %}
         </ul>
     </div>
-
 </nav>
 <div class="container">
     <div class="row">
@@ -78,6 +134,8 @@
         </div>
     </div>
 </div>
+
+
 
 {% block javascripts %}{% endblock %}
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

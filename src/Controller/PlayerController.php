@@ -2,97 +2,94 @@
 
 namespace App\Controller;
 
+use App\Entity\Player;
+use App\Form\PlayerType;
+use App\Repository\PlayerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+/**
+ * @Route("/player")
+ *  @IsGranted("ROLE_COACH")
+ */
 class PlayerController extends AbstractController
 {
     /**
-     * @Route("/player", name="player")
+     * @Route("/", name="player_index", methods={"GET"})
      */
-    public function index()
+    public function index(PlayerRepository $playerRepository): Response
     {
-        $template = 'player/index.html.twig';
-        $args = [];
-        return $this->render($template, $args);
+        return $this->render('player/index.html.twig', [
+            'players' => $playerRepository->findAll(),
+        ]);
     }
 
     /**
-     * @Route("/team", name="team")
+     * @Route("/new", name="player_new", methods={"GET","POST"})
      */
-    public function team()
+    public function new(Request $request): Response
     {
-        $template = 'player/team.html.twig';
-        $args = [];
-        return $this->render($template, $args);
+        $player = new Player();
+        $form = $this->createForm(PlayerType::class, $player);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($player);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('player_index');
+        }
+
+        return $this->render('player/new.html.twig', [
+            'player' => $player,
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
-     * @Route("/timetable", name="timetable")
+     * @Route("/{id}", name="player_show", methods={"GET"})
      */
-    public function timetable()
+    public function show(Player $player): Response
     {
-        $template = 'player/timetable.html.twig';
-        $args = [];
-        return $this->render($template, $args);
+        return $this->render('player/show.html.twig', [
+            'player' => $player,
+        ]);
     }
 
     /**
- * @Route("/Footballvideos", name="Footballvideos")
- */
-    public function Footballvideos()
+     * @Route("/{id}/edit", name="player_edit", methods={"GET","POST"})
+     */
+    public function edit(Request $request, Player $player): Response
     {
-        $template = 'player/Footballvideos.html.twig';
-        $args = [];
-        return $this->render($template, $args);
+        $form = $this->createForm(PlayerType::class, $player);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('player_index');
+        }
+
+        return $this->render('player/edit.html.twig', [
+            'player' => $player,
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
-     * @Route("/Basketballvideos", name="Basketballvideos")
+     * @Route("/{id}", name="player_delete", methods={"DELETE"})
      */
-    public function Basketballvideos()
+    public function delete(Request $request, Player $player): Response
     {
-        $template = 'player/Basketballvideos.html.twig';
-        $args = [];
-        return $this->render($template, $args);
-    }
+        if ($this->isCsrfTokenValid('delete'.$player->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($player);
+            $entityManager->flush();
+        }
 
-    /**
-     * @Route("/Cricketvideos", name="Cricketvideos")
-     */
-    public function videos()
-    {
-        $template = 'player/Cricketvideos.html.twig';
-        $args = [];
-        return $this->render($template, $args);
-    }
-
-    /**
-     * @Route("/bmi", name="bmi")
-     */
-    public function bmi()
-    {
-        $template = 'player/bmi.html.twig';
-        $args = [];
-        return $this->render($template, $args);
-    }
-
-    /**
-     * @Route("/bmr", name="bmr")
-     */
-    public function bmr()
-    {
-        $template = 'player/bmr.html.twig';
-        $args = [];
-        return $this->render($template, $args);
-    }
-    /**
-     * @Route("/ToDOList", name="ToDOList")
-     */
-    public function ToDOList()
-    {
-        $template = 'player/ToDOList.html.twig';
-        $args = [];
-        return $this->render($template,$args);
+        return $this->redirectToRoute('player_index');
     }
 }
